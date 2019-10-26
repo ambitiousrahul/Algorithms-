@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<h1>This is  plain HTML</h1>
+<title>HTML</title>
+</head>
+<body>
+<div>
+<button id="startBtn">Start</button>
+<script>
+const startBtn = document.getElementById('startBtn');
+
+startBtn.onclick = async () => {
+  try {
+    startBtn.disabled = true;
+    const constraints = {
+      audio: true,
+      video: true
+    };
+
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+
+    for (let track of stream.getTracks()) {
+      track.onended = () => {
+        startBtn.disabled = stream.getTracks().some((t) => t.readyState == 'live');
+      };
+    }
+  } catch (err) {
+    msgbox(err)
+    console.error(err);
+  }
+};
+</script>
+</div>
+</body>
+</html>
